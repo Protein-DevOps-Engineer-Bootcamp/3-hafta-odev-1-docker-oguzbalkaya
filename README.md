@@ -1,128 +1,141 @@
+# Protein DevOps Engineer Bootcamp
+
+The user wants to run the application which in app directory with docker.There are 3 modes.
+
+#### Mode 1 : Image Build
+
+Build an image and if registery parameter is not empty, push it to registery.
+
+Required parameters;
+- mode
+- image-name
+- image-tag
+
+Optional parameters;
+- registery (If you don't write, no push.)
+- other (If you want to give more parameters, you can use it.)
+
+#### Mode 2 : Deploy Image
+
+Run an image with Docker.
+
+Required parameters;
+- mode
+- image-name
+- image-tag
+
+Optional parameters;
+- container-name (If you don't write, docker use random name.)
+- memory (If you don't write, docker use default limit.)
+- cpu (If you don't write, docker use default limit.)
+- volume (If you don't write, no volume.)
+- port (If you don't write, docker use random port)
+- other (If you want to give more parameters, you can use it.)
 
 
-### 2.Hafta 1.Odev
----
+#### Mode 3 : Run Template App
 
-## Table of contents[![](./docs/img/pin.svg)](#table-of-contents)
+Run a template app with Docker Compose. There are 2 apps. They are MySQL and MongoDB.
 
-1. [Aciklama](#aciklama)
-2. [Not](#not)
-3. [Usage](#usage)
+Required parameters;
+- mode
+- application-name
 
----
-
-#### Aciklama: [![](./docs/img/pin.svg)](#aciklama)
-
-#### 1.Kisim
-
-Kullanici `app` dizinindeki uygulamayi docker ile calistirmak istemektedir. Ona yardimci olacak bir script yazin.
-
-1. Kullanici uygulamasini icin build edilen image icin `image name` ve `image tag` verebilmeli. Bu zorunlu 
-   bir parametre olmali, kullanici bu iki parametreden birini vermedi mi script `ERROR` verip sonlanmalidir.
-   (Not: Projenin Dockerfile'ini yazmayi unutmayiniz !!!)
-
-2. Kullanici kendi yerelinde bu docker image'i calistirabilmelidir, image'i calistirken `memory` ve `cpu` limitleri
-   tanimlayabilmeli. Herhangi bir limit belirtilmedigi surece default olarak hicbir limit belirtilmemelidir, yani 
-   limitsiz calismalidir.
-
-3. Kullaniciya iki tane image registery sunulmali `dockerhub` ve `gitlab image registery`, kullanici istedigi registery'e image pushlayabilmeli.
-
-4. Kullanicinin bazi veritabani ihtiyaci olabilir, kullaniya `mysql` ve `mongo` servislerini ayaga kaldirabilecegi bir secenek sunulmali.
-   (Not: bu template servisler icin `docker-compose` kullanin. Docker compose dosyasi icinde `memory` ve `cpu` limitlemesi yapiniz.)
+Optional parameters;
+- other (If you want to give more parameters, you can use it.)
 
 
-`Kullanici`: Bu scripti kullanan yazilimci, developer, gelistirici.
+## Files
 
----
+#### docker_dev_tools.sh
+Main script file.
 
-##### ODEV ACIKLAMASI ####
+#### docker_dev_tools.conf
+Configuration file.It contains commands, user informations, path of files, path of log files and colors.
 
-Yazilan script'in 3 tane modu olmali bu 3 mod birbirinden bagimsizdir.
+## Usage
 
-**1. Mod:** *Image Build Modu*
 
-   Kullanici burada image build edebilmeli:
 
-```shell
-   Example:
-        docker_dev_tools.sh --mode build --image-name example_image --image-tag v1 --registery example_registery     
-    
-   Not-1: "--registery" parametresi zorunlu olmamali cunku kullanici sadece image'i kendi yerelinde tutmak istiyor olabilir.  
-   Not-2: Kullanici registery vermisse image bu registery'e pushlanmali
-   
-   Opsiyonel Parametreler:
-    - registery
-   
-   Zorunlu Parametreler:
-   - mode
-   - image-name
-   - image-tag
+ `--mode <build|deploy|template>`    Select mode
+
+ `--image-name <name>`     	     Docker image name
+
+ `--image-tab <tag>`        	     Docker image tag
+ 
+ `--memory <limit>`  		     Container memory limit
+
+ `--cpu <limit>`    		     Contaimer CPU limit
+
+ `--registery <dockerhub|gitlab>`    DockerHub or GitLab Image Registery
+
+ `--application-name <mysql|mongo>`  Run MySQL or Mongo Server
+  
+ `--volume <volume>`     	     Docker volume
+
+ `--port> <ports>`     		     Ports (like 8080:8080)
+
+ `--other <parameters>`     	     Other parameters.If you want to use more parameters, you can write.( --other "--memory-swap=1g)
+
+ 
+Show help page.
+
+```bash
+  ./docker_dev_tools.sh --help
 ```
 
-**2. Mod:** *Image Deploy Modu*
+Build an image.
 
-Kullanici burada build ettigi image'i calistirabilmelidir.
-
-```shell
-    Example: 
-        docker_dev_tools.sh --mode deploy --image-name example_image --image-tag v1 --container-name example_container --memory "1g" --cpu "1.0"
-    
-    Zorunlu Parametreler:
-    - mode
-    - image-name
-    - image tag
-    
-    Opsiyonel Parametreler:
-    - container-name
-    - memory
-    - cpu 
-          
+```bash
+  ./docker_dev_tools.sh --mode build --image-name name --image-tag latest
 ```
 
-**3. Mod:** *Template App Calistirma*
+Build an image and push it to DockerHub.If you want to push to GitLab Registery, you need to write gitlab to registery parameter.
 
-Bu mod icin kullanici kendisine sunulan template uygulamayi calistirabilmeli, sadece iki secenek sunulmali.
-Kullanici bu seceneklerde olmayan bir uygulama ismi girerse hata verilmelidir. Bu template uygulamalarin `docker-compose` 
-dosyalarini yazmalisiniz.
-
-```shell
-    Example: 
-        docker_dev_tools.sh --mode tempate --application-name mysql
-    
-    Zorunlu Parametreler:
-    - mode
-    - application-name
-    
-    Not: mysql farkli, mongo farkli docker-compose dosyalari icinde olmali.
+```bash
+  ./docker_dev_tools.sh --mode build --image-name name --image-tag latest --registery dockerhub
 ```
 
+Run an image with default limits and random container name.
 
-
-
----
-
-#### Not: [![](./docs/img/pin.svg)](#not)
-
-- Siz istediginiz her hangi bir dilde yazilmis farkli bir projeyi kullanabilirsiniz.
-- Zorunlu olan herhangi bir parametre verilmedigi zaman script `ERROR` verip durmalidir.
----
-
-
-#### Example Usage: [![](./docs/img/pin.svg)](#usage)
-
-
-```shell
-
-$ docker_dev_tools.sh
-
-Usage:
-    --mode              Select mode <build|deploy|template> 
-    --image-name        Docker image name
-    --image-tag         Docker image tag
-    --memory            Container memory limit
-    --cpu               Container cpu limit
-    --container-name    Container name
-    --registery         DocherHub or GitLab Image registery
-    --application-name  Run mysql or mongo server
+```bash
+  ./docker_dev_tools.sh --mode deploy --image-name name --image-tag latest 
 ```
+
+Run an image with special limits and special container name.
+
+```bash
+  ./docker_dev_tools.sh --mode deploy --image-name name --image-tag latest --memory 1g --cpu 2 --container-name mycontainer
+```
+
+Run an image with special limit and random container name. Also we can give more parameters with --other like the example.
+
+```bash
+  ./docker_dev_tools.sh --mode deploy --image-name name --image-tag latest --memory 1g --cpu 2 --other "--memory-swap=1g --memory-reversation=750m"
+```
+
+Run an image with Docker Volume.
+
+```bash
+  ./docker_dev_tools.sh --mode deploy --image-name name --image-tag latest --memory 1g --cpu 1 --volume /home/user/data:/app
+```
+
+Run an app with docker compose.It use docker compose files which in the path written in configuration file.If you want to run mongo server, you need to write mongo to application name parameter.
+
+```bash
+  ./docker_dev_tools.sh --mode template --application-name mysql
+```
+
+## Technologies
+
+- Linux
+- Bash Scripting
+- Git
+- Docker
+
+
+## License
+
+[GPL3](https://www.gnu.org/licenses/gpl-3.0.html)
+
 
