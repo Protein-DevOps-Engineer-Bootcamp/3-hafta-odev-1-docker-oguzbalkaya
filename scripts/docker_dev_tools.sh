@@ -14,7 +14,7 @@ BASEDIR=$(dirname "$SCRIPT")
 
 
 #Import configurations
-source "$BASEDIR/run_with_docker.conf"
+source "$BASEDIR/docker_dev_tools.conf"
 
 #####
 

@@ -47,11 +47,18 @@ Optional parameters;
 
 ## Files
 
-#### docker_dev_tools.sh
+#### /scripts/docker_dev_tools.sh
 Main script file.
 
-#### docker_dev_tools.conf
+#### /scripts/docker_dev_tools.conf
 Configuration file.It contains commands, user informations, path of files, path of log files and colors.
+
+#### /compose_files/mongo.yaml
+Docker Compose file for MongoDB
+
+#### /compose_files/mysql.yaml
+Docker Compose file for MySQL
+
 
 ## Usage
 
